@@ -23,7 +23,7 @@ export default function Layout({children}) {
                                 <Link color="inherit">Author&Docs</Link>
                             </Typography>
                         </NextLink>
-                        <NextLink  href="/account" passHref>
+                        <NextLink  href="/login" passHref>
                             <Typography color="inherit">
                                 <Link color="inherit">Login</Link>
                             </Typography>

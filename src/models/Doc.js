@@ -11,8 +11,7 @@ const DocSchema = new mongoose.Schema({
     },
     description: {
         type: String,
-        required: [true, 'Please add a description'],
-        maxlength: [200, 'Description cannot be more than 40 characters']
+        required: [true, 'Please add a description']
     }
 }, {
     timestamps: true

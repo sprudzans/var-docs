@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import {useRouter} from "next/router";
-import Layout from "../../components/Layout";
+import Layout from "../components/Layout";
 
 export default function Login() {
     const router = useRouter();
@@ -24,7 +24,7 @@ export default function Login() {
                 <input type="password" name="password" placeholder="password"/>
                 <input type="submit" value="Login"/>
             </form>
-            <p>Don't have an account? Please <a href="/account/register">register</a></p>
+            <p>Don't have an account? Please <a href="/register">register</a></p>
         </Layout>
     )
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import Layout from "../../components/Layout";
+import Layout from "../components/Layout";
 
 export default function Register() {
     function handleSubmit(e) {
@@ -21,7 +21,7 @@ export default function Register() {
                 <input type="password" name="password" placeholder="password"/>
                 <input type="submit" value="Create an account"/>
             </form>
-            <p>Have an account? Please <a href="/account/login">login</a></p>
+            <p>Have an account? Please <a href="/login">login</a></p>
         </Layout>
     )
 }

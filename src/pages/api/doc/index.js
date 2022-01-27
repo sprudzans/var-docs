@@ -5,17 +5,30 @@ import { jsPDF } from "jspdf";
 import fs from 'fs';
 
 const handler = nc();
+const getText = function (text, variables) {
+    let template = text.split(' ');
+    template.forEach(word => {
+        variables[word] ? template[template.indexOf(word)] = variables[word] : false;
+    })
+    return template.join(' ');
+}
 
 // CREATE
 handler.post(async (req, res) => {
-    await db.connect();
+    await db.connect()
+
+    const description = req.body.variables ? getText(req.body.description, req.body.variables) : req.body.description
+
     const newDoc = new Doc({
         author: req.body.author,
         title: req.body.title,
-        description: req.body.description
+        description
     })
+
+    console.log(newDoc);
     const doc = await newDoc.save();
     await db.disconnect();
+
 
     const pdf = new jsPDF();
     pdf.text(req.body.description, 10, 10);

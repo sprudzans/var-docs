@@ -3,23 +3,21 @@ import Layout from "../../components/Layout";
 import {useEffect} from "react";
 import {useRouter} from "next/router";
 
-export default function Create(props) {
-    const {account} = props;
+export default function Create({account}) {
     const router = useRouter();
+
+    useEffect(() => {
+        if(!account){
+            router.push('/login')
+        }
+    })
 
     async function handleSubmit(e) {
         e.preventDefault();
         let title = e.target.title.value, description = e.target.description.value;
-        try {
-            const doc = await axios.post('/api/doc/', {author: account._id, title, description});
-            doc ? router.push('/account') : console.log('Something is broken');
-        } catch (e) { alert('Something is broken') }
-
+        const doc = await axios.post('/api/doc/', {author: account._id, title, description});
+        doc ? router.push('/account') : console.log('Something is broken');
     }
-
-    useEffect(() => {
-        console.log(account);
-    })
 
     return (
         <Layout>
@@ -34,9 +32,18 @@ export default function Create(props) {
 }
 
 export function getServerSideProps (ctx) {
-    return {
-        props : {
-            account: JSON.parse(ctx.req.cookies.accountInfo)
+    if(JSON.parse(ctx.req.cookies.accountInfo)){
+        return {
+            props : {
+                account: JSON.parse(ctx.req.cookies.accountInfo)
+            }
+        }
+    } else {
+        return {
+            props : {
+                account: false
+            }
         }
     }
+
 }
