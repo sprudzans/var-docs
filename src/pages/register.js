@@ -30,7 +30,7 @@ export default function Register() {
     }
 
     return (
-        <Layout>
+        <Layout title="Register" isLoginPage={true}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>
                     <Typography component="h1" variant="h1">

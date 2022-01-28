@@ -27,7 +27,7 @@ export default function Login() {
     }
 
     return (
-        <Layout title={'Login'}>
+        <Layout title={'Login'} isLoginPage={true}>
             <form onSubmit={handleSubmit(submitHandler)} className="form">
                 <Typography component="h1" variant="h1">
                     Login

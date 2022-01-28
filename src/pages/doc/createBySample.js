@@ -36,7 +36,7 @@ export default function Create({account, sample}) {
     }
 
     return (
-        <Layout>
+        <Layout title="Create document by sample">
             <h1>Create document by sample</h1>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>

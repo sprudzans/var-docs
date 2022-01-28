@@ -36,7 +36,7 @@ export default function Create({account}) {
 
 
     return (
-        <Layout>
+        <Layout title="Create sample">
             <h1>Create sample with $variables</h1>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>

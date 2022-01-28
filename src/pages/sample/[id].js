@@ -36,7 +36,7 @@ export default function Document ({sample}) {
     }
 
     return (
-        <Layout>
+        <Layout title={sample.name}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>
                     <ListItem>

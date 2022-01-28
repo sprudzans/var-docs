@@ -7,7 +7,7 @@ import Layout from "../components/Layout";
 
 export default function Index({account, docs, samples}) {
     return (
-        <Layout account={account}>
+        <Layout title="Home">
             <h1>Welcome, {account.username}!</h1>
             <p>Choice your document</p>
             <List>
@@ -19,7 +19,7 @@ export default function Index({account, docs, samples}) {
                     </ListItem>
                 )) : ""}
                 <ListItem>
-                    <NextLink href="/doc/create">
+                    <NextLink href="/doc/create" passHref>
                         <Link>Create a new document</Link>
                     </NextLink>
                 </ListItem>
@@ -34,7 +34,7 @@ export default function Index({account, docs, samples}) {
                     </ListItem>
                 )) : ""}
                 <ListItem>
-                    <NextLink href="/sample/create">
+                    <NextLink href="/sample/create" passHref>
                         <Link>Create a new sample</Link>
                     </NextLink>
                 </ListItem>

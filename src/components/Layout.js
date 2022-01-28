@@ -9,9 +9,8 @@ import {useRouter} from "next/router";
 
 const theme = createTheme();
 
-export default function Layout({title, description, account, children}) {
+export default function Layout({title, description, isLoginPage, children}) {
     const router = useRouter();
-
     const handleDelete = function () {
         Cookies.remove('accountInfo');
         router.push('/');
@@ -34,18 +33,11 @@ export default function Layout({title, description, account, children}) {
                                 <Link color="inherit">Author&Docs</Link>
                             </Typography>
                         </NextLink>
-                        {account ? (
+                        {isLoginPage ? "" : (
                             <Typography color="inherit">
                                 <Button variant="contained" color="secondary" onClick={handleDelete}>Logout</Button>
                             </Typography>
-                        ) : (
-                            <NextLink href="/login" passHref>
-                                <Typography color="inherit">
-                                    <Link color="inherit">Login</Link>
-                                </Typography>
-                            </NextLink>
                         )}
-
                     </Toolbar>
                 </AppBar>
                 <Container>

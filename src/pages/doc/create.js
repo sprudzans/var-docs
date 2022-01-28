@@ -26,7 +26,7 @@ export default function Create({account}) {
     }
 
     return (
-        <Layout>
+        <Layout title="Create document">
             <h1>Create document</h1>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>

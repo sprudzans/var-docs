@@ -39,7 +39,7 @@ export default function Document({doc}) {
     }
 
     return (
-        <Layout>
+        <Layout title={doc.title}>
             <form onSubmit={handleSubmit(submitHandler)}>
                 <List>
                     <ListItem>
