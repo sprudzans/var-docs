@@ -20,8 +20,8 @@ export default function Register() {
         }
         try {
             const {data} = await axios.post('/api/account/register', {username, email, password});
-            if ( data.message ){
-                alert(data.message)
+            if ( data.error ){
+                alert(data.error)
             } else{
                 Cookies.set('accountInfo', JSON.stringify(data), { expires: 7 });
                 router.push('/')
