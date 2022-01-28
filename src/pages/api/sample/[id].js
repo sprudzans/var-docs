@@ -7,24 +7,22 @@ const handler = nc();
 // UPDATE
 handler.put(async (req, res) => {
     await db.connect();
-    const sample = await Sample.findByIdAndUpdate(req.query.id, req.body, {
+    await Sample.findByIdAndUpdate(req.query.id, req.body, {
         new: true,
         runValidators: true
     });
     await db.disconnect();
 
-    console.log("Sample is updated.");
-    res.send(sample);
+    res.send({message: "Sample is updated"});
 })
 
 // DELETE
 handler.delete(async (req, res) => {
     await db.connect();
-    const sample = await Sample.deleteOne({_id: req.query.id});
+    await Sample.deleteOne({_id: req.query.id});
     await db.disconnect();
 
-    console.log("Sample is deleted.");
-    res.send(sample);
+    res.send({message: "Sample is deleted"});
 })
 
 export default handler;

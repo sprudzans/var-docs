@@ -1,36 +1,44 @@
 import NextLink from "next/link";
 import db from "../utils/dbconnect";
 import Doc from "../models/Doc";
-import {Link} from '@mui/material';
+import Sample from "../models/Sample";
+import {Link, List, ListItem} from '@mui/material';
 import Layout from "../components/Layout";
-import {useEffect} from "react";
-import {useRouter} from "next/router";
 
-export default function Index({account, docs}) {
-    const router = useRouter();
-
-    useEffect(() => {
-        if (!account) {
-            router.push('/login')
-        }
-        console.log(account);
-    })
-
+export default function Index({account, docs, samples}) {
     return (
-        <Layout>
-            <h1>Welcome {account.username}</h1>
-            <p>Choice your document or sample</p>
-            <ul>
-                {docs.map(el => (
-                    <li key={el._id}>
+        <Layout account={account}>
+            <h1>Welcome, {account.username}!</h1>
+            <p>Choice your document</p>
+            <List>
+                {docs.length ? docs.map(el => (
+                    <ListItem key={el._id}>
                         <NextLink href={`/doc/${el._id}`} passHref>
                             <Link color="inherit">{el.title}</Link>
                         </NextLink>
-
-                    </li>
-                ))}
-            </ul>
-            <NextLink href="/doc/create">Create a new document</NextLink>
+                    </ListItem>
+                )) : ""}
+                <ListItem>
+                    <NextLink href="/doc/create">
+                        <Link>Create a new document</Link>
+                    </NextLink>
+                </ListItem>
+            </List>
+            <p>Choice your sample</p>
+            <List>
+                {samples.length ? samples.map(el => (
+                    <ListItem key={el._id}>
+                        <NextLink href={`/sample/${el._id}`} passHref>
+                            <Link color="inherit">{el.name}</Link>
+                        </NextLink>
+                    </ListItem>
+                )) : ""}
+                <ListItem>
+                    <NextLink href="/sample/create">
+                        <Link>Create a new sample</Link>
+                    </NextLink>
+                </ListItem>
+            </List>
         </Layout>
     )
 }
@@ -42,18 +50,21 @@ export async function getServerSideProps(ctx) {
         const account = JSON.parse(ctx.req.cookies.accountInfo);
         await db.connect();
         const docs = await Doc.find({author: account._id}).lean();
+        const samples = await Sample.find({author: account._id}).lean();
+
         await db.disconnect()
         return {
             props: {
                 docs: docs.map(db.convertDocToObj),
+                samples: samples.map(db.convertDocToObj),
                 account
             }
         }
     } else {
         return {
-            props: {
-                docs: [],
-                account: false
+            redirect: {
+                permanent: false,
+                destination: '/login'
             }
         }
     }

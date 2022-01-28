@@ -8,21 +8,29 @@ const handler = nc();
 
 handler.post(async (req, res) => {
     await db.connect();
-    const newAccount = new Account({
-        username: req.body.username,
-        password: bcrypt.hashSync(req.body.password),
-        isAdmin: false,
-    })
-    const account = await newAccount.save();
-    await db.disconnect();
+    const accountCheck = Account.find({email: req.body.email});
 
-    const token = signToken(account);
-    res.send({
-        token,
-        _id: account._id,
-        name: account.username,
-        isAdmin: account.isAdmin
-    });
+    if (!accountCheck.length) {
+        const newAccount = new Account({
+            username: req.body.username,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password),
+            isAdmin: false,
+        })
+        const account = await newAccount.save();
+
+        const token = signToken(account);
+        res.send({
+            token,
+            _id: account._id,
+            username: account.username,
+            email: account.email,
+            isAdmin: account.isAdmin
+        });
+    } else {
+        res.send({error: `${req.body.email} is already in use`});
+    }
+    await db.disconnect();
 })
 
 export default handler;

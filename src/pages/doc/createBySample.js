@@ -1,50 +1,80 @@
 import axios from "axios";
 import Layout from "../../components/Layout";
-import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import db from "../../utils/dbconnect";
 import Sample from "../../models/Sample";
+import {Button, List, ListItem, TextField} from "@mui/material";
+import {Controller, useForm} from "react-hook-form";
 
 export default function Create({account, sample}) {
     const [variables, setVariables] = useState({})
     const router = useRouter();
+    const {
+        handleSubmit,
+        control,
+        formState: {errors}
+    } = useForm();
 
-    useEffect(() => {
-        if(!account){
-            router.push('/login')
-        }
-    })
-
-    async function handleSubmit(e) {
-        e.preventDefault();
-        const doc = await axios.post('/api/doc/', {
+    const submitHandler = async({title}) => {
+        const {data} = await axios.post('/api/doc/', {
             author: account._id,
-            title: e.target.title.value,
+            title: title,
             description: sample.text,
             variables
         });
-        doc ? router.push('/account') : alert('Something is broken');
+
+        if (data.message) {
+            alert(data.message);
+            router.push("/");
+        } else {
+            alert(data.error);
+        }
     }
 
     function handleChange (e) {
         setVariables({...variables, [e.target.name]: e.target.value});
-        console.log(variables);
     }
 
     return (
         <Layout>
             <h1>Create document by sample</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="title" placeholder="title"/><br/>
-                <textarea name="sample" value={sample.text} disabled/>
-                <ul>
+            <form onSubmit={handleSubmit(submitHandler)}>
+                <List>
+                    <ListItem>
+                        <Controller
+                            name="title"
+                            control={control}
+                            defaultValue="Please add a title"
+                            rules={{
+                                required: true,
+                                minLength: 10
+                            }}
+                            render={({field}) => (
+                                <TextField
+                                    variant="outlined"
+                                    fullWidth
+                                    id="title"
+                                    label="Title"
+                                    inputProps={{type: 'text',}}
+                                    error={Boolean(errors.title)}
+                                    helperText={errors.title
+                                        ? errors.title.type === 'minLength'
+                                            ? 'Title length is more that 10'
+                                            : 'Title is required'
+                                        : ''}
+                                    {...field}/>
+                            )}/>
+                    </ListItem>
+                    <ListItem>
+                        <p>{sample.text}</p>
+                    </ListItem>
                     {sample.variables ? sample.variables.map((elem, index) => (
-                        <li key={index}>
-                            <input name={elem} type="text" placeholder={elem} onChange={handleChange}/>
-                        </li>
+                        <ListItem key={index}>
+                            <TextField name={elem} type="text" placeholder={elem} onChange={handleChange}/>
+                        </ListItem>
                     )) : ''}
-                </ul>
-                <input type="submit" value="Create a doc"/>
+                </List>
+                <Button type="submit" variant="contained">Create a doc</Button>
             </form>
         </Layout>
     )
@@ -64,9 +94,9 @@ export async function getServerSideProps (ctx) {
         }
     } else {
         return {
-            props : {
-                account: false,
-                sample: false
+            redirect: {
+                permanent: false,
+                destination: '/login'
             }
         }
     }

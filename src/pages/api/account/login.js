@@ -8,7 +8,7 @@ const handler = nc();
 
 handler.post(async (req, res) => {
     await db.connect();
-    const account = await Account.findOne({username: req.body.username});
+    const account = await Account.findOne({email: req.body.email});
     await db.disconnect();
 
     if(account && bcrypt.compareSync(req.body.password, account.password)){
@@ -17,12 +17,12 @@ handler.post(async (req, res) => {
             token,
             _id: account._id,
             username: account.username,
+            email: account.email,
             isAdmin: account.isAdmin
         });
     } else {
-        res.status(401).send({message: 'Invalid username or password'});
+        res.send({error: 'Invalid email or password'});
     }
-    res.send(account)
 })
 
 export default handler;
