@@ -6,11 +6,10 @@ import fs from 'fs';
 
 const handler = nc();
 const getText = function (text, variables) {
-    let template = text.split(' ');
-    template.forEach(word => {
-        variables[word] ? template[template.indexOf(word)] = variables[word] : false;
-    })
-    return template.join(' ');
+    for (let key in variables){
+        text = text.replace(key, variables[key]);
+    }
+    return text;
 }
 
 // CREATE

@@ -55,8 +55,8 @@ export async function getServerSideProps(ctx) {
         await db.disconnect()
         return {
             props: {
-                docs: docs.map(db.convertDocToObj),
-                samples: samples.map(db.convertDocToObj),
+                docs: docs.length ? docs.map(db.convertDocToObj) : [],
+                samples: samples.length ? samples.map(db.convertDocToObj) : [],
                 account
             }
         }

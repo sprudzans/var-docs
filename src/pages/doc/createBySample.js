@@ -5,6 +5,7 @@ import db from "../../utils/dbconnect";
 import Sample from "../../models/Sample";
 import {Button, List, ListItem, TextField} from "@mui/material";
 import {Controller, useForm} from "react-hook-form";
+import {useState} from "react";
 
 export default function Create({account, sample}) {
     const [variables, setVariables] = useState({})
@@ -33,6 +34,7 @@ export default function Create({account, sample}) {
 
     function handleChange (e) {
         setVariables({...variables, [e.target.name]: e.target.value});
+        console.log(variables);
     }
 
     return (

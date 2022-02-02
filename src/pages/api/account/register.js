@@ -8,7 +8,7 @@ const handler = nc();
 
 handler.post(async (req, res) => {
     await db.connect();
-    const accountCheck = Account.find({email: req.body.email});
+    const accountCheck =  await Account.find({email: req.body.email}).exec();
 
     if (!accountCheck.length) {
         const newAccount = new Account({

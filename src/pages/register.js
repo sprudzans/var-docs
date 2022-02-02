@@ -4,9 +4,11 @@ import Layout from "../components/Layout";
 import {Controller, useForm} from "react-hook-form";
 import {Button, List, ListItem, TextField, Typography} from "@mui/material";
 import NextLink from "next/link";
+import {useRouter} from "next/router";
 
 
 export default function Register() {
+    const router = useRouter();
     const {
         handleSubmit,
         control,
@@ -18,15 +20,13 @@ export default function Register() {
             alert('password dont match');
             return;
         }
-        try {
-            const {data} = await axios.post('/api/account/register', {username, email, password});
-            if ( data.error ){
-                alert(data.error)
-            } else{
-                Cookies.set('accountInfo', JSON.stringify(data), { expires: 7 });
-                router.push('/')
-            }
-        } catch (e) { alert("Something is broken") }
+        const {data} = await axios.post('/api/account/register', {username, email, password});
+        if ( data.error ){
+            alert(data.error)
+        } else{
+            Cookies.set('accountInfo', JSON.stringify(data), { expires: 7 });
+            router.push('/')
+        }
     }
 
     return (
