@@ -34,9 +34,7 @@ handler.post(async (req, res) => {
         const pdf = new jsPDF();
         pdf.text(description, 10, 10);
         const file = pdf.output();
-        fs.writeFile(`public/upload/${doc._id}.pdf`, file, (error) => {
-            if (error) console.log(error); else console.log("File created");
-        });
+        await fs.promises.writeFile(`public/upload/${doc._id}.pdf`, file);
 
         res.send({message: "Doc is created"});
     } else {

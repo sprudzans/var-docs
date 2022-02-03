@@ -34,7 +34,6 @@ export default function Create({account, sample}) {
 
     function handleChange (e) {
         setVariables({...variables, [e.target.name]: e.target.value});
-        console.log(variables);
     }
 
     return (

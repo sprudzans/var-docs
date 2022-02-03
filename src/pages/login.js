@@ -89,7 +89,7 @@ export default function Login() {
                         </Button>
                     </ListItem>
                     <ListItem>
-                        Don't have an account? Please&nbsp;<NextLink href="/register">register</NextLink>
+                        Don`t have an account? Please&nbsp;<NextLink href="/register">register</NextLink>
                     </ListItem>
                 </List>
             </form>
