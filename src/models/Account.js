@@ -5,10 +5,10 @@ const accountSchema = new mongoose.Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     isAdmin: {type: Boolean, required: true, default: false},
+    role: {type: String, required: true}
 }, {
     timestamps: true
 })
 
-const Account = mongoose.models.Account || mongoose.model('Account', accountSchema)
 
-export default Account;
+module.exports = mongoose.models.Account || mongoose.model('Account', accountSchema)

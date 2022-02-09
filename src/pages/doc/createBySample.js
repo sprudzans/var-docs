@@ -97,7 +97,7 @@ export async function getServerSideProps (ctx) {
         return {
             redirect: {
                 permanent: false,
-                destination: '/login'
+                destination: '/auth'
             }
         }
     }

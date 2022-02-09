@@ -12,10 +12,12 @@
     "@emotion/react": "^11.7.1",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.6.0",
+    "@hapi/iron": "^6.0.0",
     "@mui/icons-material": "^5.3.0",
     "@mui/material": "^5.3.0",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
+    "cookie": "^0.4.2",
     "formidable": "^2.0.1",
     "js-cookie": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
@@ -23,10 +25,14 @@
     "mongoose": "^6.1.6",
     "next": "12.0.8",
     "next-connect": "^0.11.0",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0",
     "prop-types": "^15.8.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-hook-form": "^7.25.1"
+    "react-hook-form": "^7.25.1",
+    "swr": "^1.2.1",
+    "uuidv4": "^6.2.12"
   },
   "devDependencies": {
     "eslint": "8.7.0",
