@@ -1,13 +1,20 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import Router from 'next/router'
 import Layout from "../components/Layout";
 import {Button, List, ListItem, Switch, TextField, Typography} from "@mui/material";
 import {Controller, useForm} from "react-hook-form";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useUser} from "../lib/hooks";
 
 export default function Auth() {
     const [page, setPage] = useState('Login');
+    const [user, { mutate }] = useUser()
+    const [errorMsg, setErrorMsg] = useState('')
+
+    useEffect(() => {
+        // redirect to home if user is authenticated
+        if (user) Router.push('/')
+    }, [user])
 
     const {
         handleSubmit,
@@ -18,35 +25,34 @@ export default function Auth() {
 
     const submitHandler = async ({username, email, password, confirmPassword}) => {
         if (page === "Login"){
-            try {
-                const {data} = await axios.post('/api/account/login', {email, password});
-                if (data.error) {
-                    alert(data.error)
-                } else {
-                    Cookies.set('accountInfo', JSON.stringify(data), {expires: 7});
-                    Router.push('/')
-                }
-            } catch (e) {
-                alert('Something is broken')
+            const res = await axios.post('/api/login', {username, email, password});
+            if (res.status === 200) {
+                const userObj = res.data
+                // set user to useSWR state
+                mutate(userObj)
+            } else {
+                setErrorMsg('Incorrect username or password. Try better!')
             }
         } else {
             if(password !== confirmPassword){
-                alert('password dont match');
+                setErrorMsg('password dont match');
                 return;
             }
-            const {data} = await axios.post('/api/account/register', {username, email, password});
-            if ( data.error ){
-                alert(data.error)
-            } else{
-                Cookies.set('accountInfo', JSON.stringify(data), { expires: 7 });
-                Router.push('/')
+            const res = await axios.post('/api/users', {username, email, password})
+
+            if (res.status === 201) {
+                const userObj = res.data
+                // set user to useSWR state
+                mutate(userObj)
+            } else {
+                setErrorMsg(res.data)
             }
         }
 
     }
 
     const switchHandler = (event, data) => {
-        data ? setPage('Login') : setPage('Register');
+        data ? setPage('Login') : setPage('SignUp');
     }
 
     return (
@@ -55,9 +61,13 @@ export default function Auth() {
                 <Typography component="h1" variant="h1">
                     {page}
                 </Typography>
+                <Typography component="h4" variant="h4">
+                    {errorMsg}
+                </Typography>
+
                 <List>
                     <ListItem>
-                        <Typography>Register</Typography>
+                        <Typography>SignUp</Typography>
                         <Controller
                             control={control}
                             name="type"
@@ -71,7 +81,6 @@ export default function Auth() {
                         />
                         <Typography>Login</Typography>
                     </ListItem>
-                    {page === "Register" ? (
                         <ListItem>
                             <Controller
                                 name="username"
@@ -97,7 +106,6 @@ export default function Auth() {
                                         {...field}/>
                                 )}/>
                         </ListItem>
-                    ) : ""}
                     <ListItem>
                         <Controller
                             name="email"
@@ -148,7 +156,7 @@ export default function Auth() {
                                     {...field}/>
                             )}/>
                     </ListItem>
-                    {page === "Register" ? (
+                    {page === "SignUp" ? (
                         <ListItem>
                             <Controller
                                 name="confirmPassword"

@@ -20,7 +20,7 @@ const auth = nextConnect()
         // Initialize mocked database
         // Remove this after you add your own database
         req.session.users = req.session.users || []
-        next()
+        next();
     })
     .use(passport.initialize())
     .use(passport.session())

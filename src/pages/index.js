@@ -4,11 +4,42 @@ import Doc from "../models/Doc";
 import Sample from "../models/Sample";
 import {Link, List, ListItem} from '@mui/material';
 import Layout from "../components/Layout";
+import { useUser, fetcher } from '../lib/hooks'
+import useSWR from 'swr'
+
+function UserList() {
+    const { data: { users } = {} } = useSWR('/api/users', fetcher)
+    return (
+        <>
+            <h2>All users</h2>
+            {!!users?.length && (
+                <ul>
+                    {users.map((user) => (
+                        <li key={user.username}>
+                            <pre>{JSON.stringify(user, null, 2)}</pre>
+                        </li>
+                    ))}
+
+                    <style jsx>{`
+            pre {
+              white-space: pre-wrap;
+              word-wrap: break-word;
+            }
+          `}</style>
+                </ul>
+            )}
+        </>
+    )
+}
 
 export default function Index({account, docs, samples}) {
+    const [user, {mutate}] = useUser();
+
     return (
         <Layout title="Home">
             <h1>Welcome, {account.username}!</h1>
+            <p>Your session:</p>
+            <pre>{JSON.stringify(user, null, 2)}</pre>
             <p>Choice your document</p>
             <List>
                 {docs.length ? docs.map(el => (
@@ -39,6 +70,7 @@ export default function Index({account, docs, samples}) {
                     </NextLink>
                 </ListItem>
             </List>
+            <UserList/>
         </Layout>
     )
 }
@@ -61,12 +93,18 @@ export async function getServerSideProps(ctx) {
             }
         }
     } else {
+        // return {
+        //     redirect: {
+        //         permanent: false,
+        //         destination: '/auth'
+        //     }
+        // }
         return {
-            redirect: {
-                permanent: false,
-                destination: '/auth'
+            props: {
+                docs: [],
+                samples: [],
+                account: {username: "test"}
             }
         }
     }
-
 }

@@ -1,6 +1,6 @@
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
-import { findUserByUsername, validatePassword } from './db'
+import {findUserByEmail, findUserByUsername, validatePassword} from './userDB'
 
 passport.serializeUser(function (user, done) {
     // serialize the username into session
@@ -9,7 +9,7 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (req, id, done) {
     // deserialize the username back into user object
-    const user = findUserByUsername(req, id)
+    const user = findUserByEmail(req, id)
     done(null, user)
 })
 

@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import Account from '../models/Account'
 import { v4 as uuidv4 } from 'uuid'
 
 export function getAllUsers(req) {
@@ -6,7 +7,7 @@ export function getAllUsers(req) {
     return req.session.users
 }
 
-export function createUser(req, { username, password, name }) {
+export async function createUser(req, { username, password, email }) {
     // Here you should create the user and save the salt and hashed password (some dbs may have
     // authentication methods that will do it for you so you don't have to worry about it):
     const salt = crypto.randomBytes(16).toString('hex')
@@ -17,14 +18,20 @@ export function createUser(req, { username, password, name }) {
         id: uuidv4(),
         createdAt: Date.now(),
         username,
-        name,
+        email,
         hash,
         salt,
     }
 
     // Here you should insert the user into the database
-    // await db.createUser(user)
+    // await Account.create({...user})
     req.session.users.push(user)
+}
+
+export function findUserByEmail(req, email) {
+    // Here you find the user based on id/username in the database
+    // const user = await db.findUserById(id)
+    return req.session.users.find((user) => user.email === email)
 }
 
 export function findUserByUsername(req, username) {
@@ -32,6 +39,7 @@ export function findUserByUsername(req, username) {
     // const user = await db.findUserById(id)
     return req.session.users.find((user) => user.username === username)
 }
+
 
 export function updateUserByUsername(req, username, update) {
     // Here you update the user based on id/username in the database
@@ -49,7 +57,7 @@ export function deleteUser(req, username) {
     )
 }
 
-// Compare the password of an already fetched user (using `findUserByUsername`) and compare the
+// Compare the password of an already fetched user (using `findUserByEmail`) and compare the
 // password for a potential match
 export function validatePassword(user, inputPassword) {
     const inputHash = crypto
